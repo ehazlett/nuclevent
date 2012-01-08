@@ -1,0 +1,54 @@
+/*
+* Web Fonts from fontspring.com
+*
+* All OpenType features and all extended glyphs have been removed.
+* Fully installable fonts can be purchased at http://www.fontspring.com
+*
+* The fonts included in this stylesheet are subject to the End User License you purchased
+* from Fontspring. The fonts are protected under domestic and international trademark and
+* copyright law. You are prohibited from modifying, reverse engineering, duplicating, or
+* distributing this font software.
+*
+* (c) 2010 Fontspring
+*
+*
+*
+*
+* The fonts included are copyrighted by the vendor listed below.
+*
+* Vendor:      FontSite Inc.
+* License URL: http://www.fontspring.com/fflicense/fontsite
+*
+*
+*/
+
+@font-face {
+	font-family: 'FunctionProMedium';
+	src: url('FunctionPro-Medium-webfont.eot');
+	src: url('FunctionPro-Medium-webfont.woff') format('woff'),
+		url('FunctionPro-Medium-webfont.ttf') format('truetype'),
+		url('FunctionPro-Medium-webfont.svg#webfont') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'FunctionProMediumOblique';
+	src: url('FunctionPro-MediumOblique-webfont.eot');
+	src: url('FunctionPro-MediumOblique-webfont.woff') format('woff'),
+		url('FunctionPro-MediumOblique-webfont.ttf') format('truetype'),
+		url('FunctionPro-MediumOblique-webfont.svg#webfont') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'FunctionProCondensed';
+	src: url('FunctionPro-Condensed-webfont.eot');
+	src: url('FunctionPro-Condensed-webfont.woff') format('woff'),
+		url('FunctionPro-Condensed-webfont.ttf') format('truetype'),
+		url('FunctionPro-Condensed-webfont.svg#webfont') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block overview_section %}
+<div class="hero-unit">
+  <h1 class="center">Nuclevent</h1>
+  <p class="center">{{_('Nuclevent shows upcoming events from local venues.')}}</p>
+  <p class="center"><a class="btn primary large" href="{{url_for('events')}}">{{_('What&#39s happening?')}}</a></p>
+</div>
+{% endblock %}
+
+{% block main_content %}
+<div class="row">
+</div>
+<script type="text/javascript">
+  $(function(){
+    $("li#home").addClass("active");
+  });
+</script>
+{% endblock %}

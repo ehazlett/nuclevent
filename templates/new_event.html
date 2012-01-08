@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block base_content %}
+<div class="container">
+  <div class="content">
+    <div class="page-header">
+      <div class="pull-right">
+      </div>
+      <h1>{{_('add new event')}}</h1>
+    </div>
+    <div class="row">
+      <div class="span8">
+        <form id="form-new-event" class="narrow" method="post">
+          <input id="latlng" type="hidden" name="latlng" value=""/>
+          <fieldset>
+            <div class="clearfix">
+              <label for="title">{{_('Title')}}</label>
+              <div class="input">
+                <input id="title" class="required" name="title" type="text"/>
+              </div>
+            </div>
+            <div class="clearfix">
+              <label for="description">{{_('Description')}}</label>
+              <div class="input">
+                <textarea id="description" class="required"></textarea>
+              </div>
+            </div>
+            <div class="clearfix">
+              <label>{{_('Start')}}</label>
+              <div class="input">
+                <div class="inline-inputs">
+                  <input id="start-date" class="small required" type="text" name="start_date" value=""/>
+                  <input id="start-time" class="mini required" type="text" name="start_time" value=""/>
+                </div>
+              </div>
+            </div>
+            <div class="clearfix">
+              <label>{{_('End')}}</label>
+              <div class="input">
+                <div class="inline-inputs">
+                  <input id="end-date" class="small required" type="text" name="end_date" value=""/>
+                  <input id="end-time" class="mini required" type="text" name="end_time" value=""/>
+                </div>
+              </div>
+            </div>
+            <div class="clearfix">
+              <label for="where">{{_('Where')}}</label>
+              <div class="input">
+                <input id="location" name="location" type="text" class="xlarge required" autocomplete="off" />
+              </div>
+            </div>
+            <div class="actions">
+              <a id="submit" href="#" class="btn success">{{_('Submit')}}</a>
+              <a href="{{url_for('events')}}" class="btn">{{_('Cancel')}}</a>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+      <div class="span8 pull-right">
+        <div id="map_canvas" class="map" style="height: 400px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  function loadDefaultTimes() {
+    var date = new Date();
+    $("#start-time").val(date.getHours()+1+':00');
+    $("#end-time").val(date.getHours()+2+':00');
+  }
+  function initialize() {
+    var marker = new google.maps.Marker();
+    var infowindow = new google.maps.InfoWindow();
+    var currentLat = 39.095963;
+    var currentLng = -94.570312;
+    var zoomLevel = 3;
+    var mapOptions = {
+      center: new google.maps.LatLng(currentLat, currentLng),
+      zoom: zoomLevel,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    var map = new google.maps.Map(document.getElementById("map_canvas"),
+        mapOptions);
+    // get current location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        currentLat = position.coords.latitude;
+        currentLng = position.coords.longitude;
+        zoomLevel = 3;
+        map.setCenter(new google.maps.LatLng(currentLat, currentLng));
+        map.setZoom(11);
+      });
+    }
+    // set default latlng
+    updateLatLng(map);
+    // search
+    var defaultBounds = new google.maps.LatLngBounds(
+      new google.maps.LatLng(currentLat-10, currentLng-10),
+      new google.maps.LatLng(currentLat+10, currentLng+10));
+    var input = document.getElementById("location");
+    var searchOptions = {
+      bounds: defaultBounds
+    };
+    autocomplete = new google.maps.places.Autocomplete(input, searchOptions);
+    autocomplete.bindTo('bounds', map);
+    google.maps.event.addListener(autocomplete, 'place_changed', function() {
+      var place = autocomplete.getPlace();
+      if (place.geometry.viewport) {
+        map.fitBounds(place.geometry.viewport);
+      } else {
+        map.setCenter(place.geometry.location);
+        map.setZoom(17);
+      }
+      var image = new google.maps.MarkerImage(
+          place.icon, new google.maps.Size(71, 71),
+          new google.maps.Point(0, 0), new google.maps.Point(17, 34),
+          new google.maps.Size(35, 35));
+      marker.setIcon(image);
+      marker.setPosition(place.geometry.location);
+      
+      infowindow.setContent(place.name);
+      infowindow.open(map, marker);
+      updateLatLng(map);
+    });
+  }
+  function updateLatLng(map){
+    var center = map.getCenter();
+    var latlng = center.lat() + ',' + center.lng();
+    $("#latlng").val(latlng);
+  }
+  $("#submit").click(function(){
+    if (validateForm("form-new-event")) {
+      $("#form-new-event").submit();
+      return true;
+    } else {
+      return false;
+    }
+  });
+  $(function(){
+    $("#start-date").datepicker();
+    // load default date
+    $("#start-date").datepicker('setDate', new Date());
+    $("#end-date").datepicker();
+    $("#end-date").datepicker('setDate', new Date());
+    loadDefaultTimes();
+    // map
+    initialize();
+  });
+</script>
+{% endblock %}
