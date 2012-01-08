@@ -27,7 +27,12 @@ LOCALES = (
 )
 SECRET_KEY = "PX0(5Or@92w`_b z1:s%j$kL8p[6{D^'"
 # app version
+API_VERSION = '0.1'
 VERSION = '0.1'
+
+API_KEYS = (
+    'defaultapikey',
+)
 
 # check dirs
 if not os.path.exists(STATIC_PATH):

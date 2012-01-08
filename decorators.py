@@ -60,7 +60,7 @@ def api_key_required(f):
         if not api_key:
             data = {'error': messages.NO_API_KEY}
             return jsonify(data)
-        if not g.db.users.find_one({'api_key': api_key}):
+        if api_key not in current_app.config['API_KEYS']:
             data = {'error': messages.INVALID_API_KEY}
             return jsonify(data)
         session['api_key'] = api_key

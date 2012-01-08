@@ -30,8 +30,10 @@ import utils
 import schema
 import messages
 from decorators import admin_required, login_required, api_key_required
+from api import api
 
 app = Flask(__name__)
+app.register_blueprint(api)
 app.debug = settings.DEBUG
 app.logger.setLevel(logging.ERROR)
 app.config.from_object('settings')
@@ -147,8 +149,6 @@ def new_event():
             start_time=start_time, end_date=end_date, end_time=end_time, \
             location=location, latlng=latlng, owner=owner)
     except Exception, e:
-        import traceback
-        traceback.print_exc()
         flash(str(e), 'error')
     return redirect(url_for('events'))
 

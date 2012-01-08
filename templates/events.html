@@ -11,7 +11,7 @@
       <h1>{{_('events')}}</h1>
     </div>
     <div class="row">
-      <div class="span6">
+      <div class="span8">
         {% if events %}
         {% for event in events %}
         <p>{{event.title}} ({{event.location}})</p>
@@ -20,7 +20,7 @@
         <p>{{_('There are no events in your area.')}}</p>
         {% endif %}
       </div>
-      <div class="span10 pull-right">
+      <div class="span8 pull-right">
         <div id="map_canvas" class="map" style="height: 400px;"></div>
       </div>
     </div>
