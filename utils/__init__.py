@@ -107,14 +107,20 @@ def delete_file(filename=None, version=-1, **kwargs):
     return fs.delete(get_file(filename=filename, version=version, **kwargs)._id)
 
 def add_event(title=None, description=None, start_date=None, start_time=None, \
-    end_date=None, end_time=None, location=None, latlng=None):
+    end_date=None, end_time=None, location=None, latlng=None, owner=None):
     if not title or not description or not location:
         raise NameError('You must specify a title, description, and location')
     db = application.get_db_connection()
     data = schema.event(title=title, description=description, start_date=start_date, \
         start_time=start_time, end_date=end_date, end_time=end_time, \
-        location=location, latlng=latlng)
+        location=location, latlng=latlng, owner=owner)
     return db.events.insert(data)
+
+def find_events(latlng=None):
+    db = application.get_db_connection()
+    if latlng:
+        pass
+    return db.events.find()
 
 def get_event(uuid=None):
     if not uuid:

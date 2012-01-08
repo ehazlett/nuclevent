@@ -12,7 +12,13 @@
     </div>
     <div class="row">
       <div class="span6">
-        <p>Test area</p>
+        {% if events %}
+        {% for event in events %}
+        <p>{{event.title}} ({{event.location}})</p>
+        {% endfor %}
+        {% else %}
+        <p>{{_('There are no events in your area.')}}</p>
+        {% endif %}
       </div>
       <div class="span10 pull-right">
         <div id="map_canvas" class="map" style="height: 400px;"></div>

@@ -123,12 +123,34 @@ def about():
 
 @app.route("/events/")
 def events():
-    return render_template("events.html")
+    ctx = {
+        'events': tuple(utils.find_events()),
+    }
+    return render_template("events.html", **ctx)
 
-@app.route("/events/new/")
+@app.route("/events/new/", methods=['GET', 'POST'])
 @login_required
 def new_event():
-    return render_template("new_event.html")
+    if request.method == 'GET':
+        return render_template("new_event.html")
+    try:
+        title = request.form['title']
+        description = request.form['description']
+        start_date = request.form['start_date']
+        start_time = request.form['start_time']
+        end_date = request.form['end_date']
+        end_time = request.form['end_time']
+        location = request.form['location']
+        latlng = request.form['latlng']
+        owner = session['user_id']
+        utils.add_event(title=title, description=description, start_date=start_date,\
+            start_time=start_time, end_date=end_date, end_time=end_time, \
+            location=location, latlng=latlng, owner=owner)
+    except Exception, e:
+        import traceback
+        traceback.print_exc()
+        flash(str(e), 'error')
+    return redirect(url_for('events'))
 
 @app.route("/login/", methods=['GET', 'POST'])
 def login():
