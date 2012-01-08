@@ -18,6 +18,7 @@ import logging
 import os
 import sys
 import pytz
+import uuid
 import traceback
 import settings
 from optparse import OptionParser
@@ -125,6 +126,7 @@ def events():
     return render_template("events.html")
 
 @app.route("/events/new/")
+@login_required
 def new_event():
     return render_template("new_event.html")
 
@@ -151,9 +153,13 @@ def login():
             flash(messages.INVALID_USERNAME_PASSWORD, 'error')
             errors = True
     if errors:
-        return redirect(url_for('login'))
+        url = url_for('login')
     else:
-        return redirect(url_for('index'))
+        if request.args.has_key('next'):
+            url = request.args['next']
+        else:
+            url = url_for('index')
+    return redirect(url)
 
 @app.route("/logout/", methods=['GET'])
 def logout():

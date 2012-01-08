@@ -24,7 +24,8 @@ def login_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         if 'auth_token' not in session:
-            return redirect(url_for('index'))
+            url = url_for('login', next=request.path)
+            return redirect(url)
         return f(*args, **kwargs)
     return decorated
 

@@ -33,3 +33,19 @@ def log(level=None, category='root', message=None):
     }
     return data
 
+def event(title=None, description=None, start_date=None, start_time=None, \
+    end_date=None, end_time=None, location=None, latlng=None, uuid=None):
+    if not uuid:
+        uuid = str(uuid4())
+    data = {
+        'uuid': uuid,
+        'title': title,
+        'description': description,
+        'start_date': start_date,
+        'start_time': start_time,
+        'end_date': end_date,
+        'end_time': end_time, 
+        'location': location,
+        'latlng': latlng,
+    }
+    return data
