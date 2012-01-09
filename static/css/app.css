@@ -122,3 +122,6 @@ form.narrow label {
   margin-right: 30px;
   width: 75px;
 }
+.event {
+  border-bottom: 1px solid #cacaca;
+}
