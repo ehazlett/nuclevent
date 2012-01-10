@@ -6,6 +6,7 @@ from flask import current_app
 from flask import json, jsonify
 import schema
 import messages
+import utils
 
 def admin_required(f):
     @wraps(f)
@@ -32,19 +33,14 @@ def login_required(f):
 def owner_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
+        user = utils.get_user(session['user'])
         if 'uuid' in kwargs:
-            p = g.db.projects.find_one({'uuid': kwargs['uuid']})
-            b = g.db.builds.find_one({'uuid': kwargs['uuid']})
-            user = g.db.users.find_one({'username': session['user']})
+            evt = g.db.events.find_one({'uuid': kwargs['uuid']})
             if user['role'].lower() != 'admin':
-                if p:
-                    if p['owner'] != session['user_id']:
+                if evt:
+                    if evt['owner'] != session['user_id']:
                         flash(messages.ACCESS_DENIED, 'error')
-                        return redirect(url_for('projects'))
-                if b:
-                    if b['owner_uuid'] != user['uuid']:
-                        flash(messages.ACCESS_DENIED, 'error')
-                        return redirect(url_for('builds'))
+                        return redirect(url_for('events'))
         return f(*args, **kwargs)
     return decorated
 

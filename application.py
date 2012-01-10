@@ -29,7 +29,7 @@ from bson import json_util, BSON
 import utils
 import schema
 import messages
-from decorators import admin_required, login_required, api_key_required
+from decorators import admin_required, login_required, owner_required, api_key_required
 from api import api
 
 app = Flask(__name__)
@@ -148,6 +148,17 @@ def new_event():
         utils.add_event(title=title, description=description, start_date=start_date,\
             start_time=start_time, end_date=end_date, end_time=end_time, \
             location=location, latlng=latlng, owner=owner)
+    except Exception, e:
+        flash(str(e), 'error')
+    return redirect(url_for('events'))
+
+@app.route("/events/<uuid>/delete/")
+@login_required
+@owner_required
+def delete_event(uuid=None):
+    try:
+        g.db.events.remove({'uuid': uuid})
+        flash(messages.EVENT_REMOVED)
     except Exception, e:
         flash(str(e), 'error')
     return redirect(url_for('events'))
@@ -339,6 +350,7 @@ if __name__=="__main__":
     op.add_option('--create-user', dest='create_user', action='store_true', default=False, help='Create/update user')
     op.add_option('--enable-user', dest='enable_user', action='store_true', default=False, help='Enable user')
     op.add_option('--disable-user', dest='disable_user', action='store_true', default=False, help='Disable user')
+    op.add_option('--port', dest='port', type=int, action='store', default=5000, help='Port to run the dev webserver')
     opts, args = op.parse_args()
 
     if opts.create_user:
@@ -351,6 +363,6 @@ if __name__=="__main__":
         toggle_user(False)
         sys.exit(0)
     # run app
-    app.run()
+    app.run(host='0.0.0.0', port=opts.port)
 
 

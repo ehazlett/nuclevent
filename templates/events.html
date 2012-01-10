@@ -14,13 +14,18 @@
       <div class="span8">
         {% if events %}
         {% for event in events %}
-        <div class="event">
+        <div class="event" data-title="{{event.title}}" data-start-date="{{event.start_date}}" data-start-time="{{event.start_time}}" data-latlng="{{event.latlng}}">
+          {% if event.owner == session['user_id'] %}
+          <div class="pull-right">
+            <a href="#" class="btn small event-delete" data-url="{{url_for('delete_event', uuid=event.uuid)}}">X</a>
+          </div>
+          {% endif %}
           <h2>{{event.title}}</h2>
           <p>{{event.location}}</p>
         </div>
         {% endfor %}
         {% else %}
-        <p>{{_('There are no events in your area.')}}</p>
+        <div class="info">{{_('Click Add Event to create an event.')}}</div>
         {% endif %}
       </div>
       <div class="span8 pull-right">
@@ -30,6 +35,7 @@
   </div>
 </div>
 <script type="text/javascript">
+  var map = null;
   function initialize() {
     var currentLat = 0;
     var currentLng = 0;
@@ -39,7 +45,7 @@
       zoom: zoomLevel,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
-    var map = new google.maps.Map(document.getElementById("map_canvas"),
+    map = new google.maps.Map(document.getElementById("map_canvas"),
         myOptions);
     // get current location
     if (navigator.geolocation) {
@@ -53,6 +59,30 @@
     }
 
   }
+  function makeMarker(name, startDate, startTime, lat, lng) {
+    var marker = new google.maps.Marker();
+    var infowindow = new google.maps.InfoWindow();
+    marker.setPosition(new google.maps.LatLng(lat, lng));
+    marker.setMap(map);
+    var content = "<div>"+name+"</div>";
+    content += "<div>"+startDate+ " @ " + startTime;
+    infowindow.setContent(content);
+    infowindow.open(map, marker);
+  }
+  $(".event").click(function() {
+    var name = (this).getAttribute('data-title');
+    var startDate = (this).getAttribute('data-start-date');
+    var startTime = (this).getAttribute('data-start-time');
+    var latlng = (this).getAttribute('data-latlng').split(',');
+    map.setCenter(new google.maps.LatLng(latlng[0], latlng[1]));
+    map.setZoom(18);
+    makeMarker(name, startDate, startTime, latlng[0], latlng[1]);
+  });
+  $(".event-delete").click(function() {
+    if (confirm("{{_('Are you sure you want to delete this event?')}}")) {
+      $(location).attr('href', (this).getAttribute('data-url'));
+    }
+  });
   $(function(){
     $("li#events").addClass("active");
     initialize();

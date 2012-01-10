@@ -66,6 +66,27 @@
             <li id="about"><a href="{{url_for('about')}}">{{_('about')}}</a></li>
             <li id="contact"><a href="#contact">{{_('contact us')}}</a></li>
           </ul>
+          {% if user %}
+          <ul class="nav secondary-nav pull-right">
+            <li class="dropdown" data-dropdown="dropdown">
+              <a href="#" class="dropdown-toggle"><img class="gravatar" src="{{user.email|gravatar}}"/>{{user.username}}</a>
+              <ul class="dropdown-menu">
+                <li><a href="{{ url_for('account') }}">{{_('account')}}</a></li>
+                {% if session.role == 'admin' %}
+                <li class="divider"></li>
+                <li><a href="{{ url_for('accounts') }}">{{_('accounts')}}</a></li>
+                {% endif %}
+                <li><a href="{{ url_for('logout') }}">{{_('logout')}}</a></li>
+              </ul>
+            </li>
+          </ul>
+          {% else %}
+          <form action="{{url_for('login')}}" class="pull-right" method="POST">
+            <input class="input-small" type="text" placeholder="{{_('Username')}}">
+            <input class="input-small" type="password" placeholder="{{_('Password')}}">
+            <button class="btn" type="submit">{{_('Login')}}</button>
+          </form>
+          {% endif %}
         </div>
       </div>
     </div>
